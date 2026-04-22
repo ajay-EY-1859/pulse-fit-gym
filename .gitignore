@@ -28,3 +28,4 @@ backend/.env
 # Project specific files
 remainingPlan.md
 DEPLOYMENT_STEPS.md
+DEPLOYMENT_CHECKLIST.md

@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: pulsefit-backend
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: MONGO_URI
+        value: mongodb+srv://username:password@cluster-url/pulsefit
+      - key: JWT_SECRET
+        value: 0098311fa45e83f72bec34b2ac78dc0257966d2a683ee6a8298c189d94bdc707c7e2b1639273198061bef75750c4bcb53cce6742f6d4ecdcab3d2944c4e02a9f
+      - key: CLIENT_ORIGIN
+        value: https://your-vercel-app.vercel.app

@@ -45,6 +45,38 @@ CLIENT_ORIGIN=http://localhost:5173
 
 For production, replace `JWT_SECRET` with a strong random secret and use MongoDB Atlas for `MONGO_URI`.
 
+## Deployment
+
+The application is configured for deployment on Vercel (frontend) and Render (backend).
+
+### Quick Deploy Steps:
+
+1. **Set up GitHub Repository:**
+   ```bash
+   # Run the setup script
+   setup-github.bat
+   ```
+
+2. **MongoDB Atlas Setup:**
+   - Create free cluster at https://cloud.mongodb.com
+   - Create database user and get connection string
+   - Update `MONGO_URI` in production environment
+
+3. **Deploy Backend to Render:**
+   - Go to https://render.com
+   - Create new Web Service from GitHub repo
+   - Set root directory: `backend`
+   - Set environment variables (see `production-env-template.txt`)
+
+4. **Deploy Frontend to Vercel:**
+   - Go to https://vercel.com
+   - Import GitHub repository
+   - Set environment variable: `VITE_API_URL=https://your-render-app.onrender.com/api`
+
+### Environment Variables:
+
+See `production-env-template.txt` for all required environment variables.
+
 ## Install Dependencies
 
 Frontend:

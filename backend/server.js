@@ -7,6 +7,9 @@ import bookingRoutes from './routes/bookingRoutes.js';
 import classRoutes from './routes/classRoutes.js';
 import membershipRoutes from './routes/membershipRoutes.js';
 import trainerRoutes from './routes/trainerRoutes.js';
+import subscriptionRoutes from './routes/subscriptionRoutes.js';
+import applicationRoutes from './routes/applicationRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 import { seedClasses } from './controllers/classController.js';
 import { seedMemberships } from './controllers/membershipController.js';
 import { seedTrainers } from './controllers/trainerController.js';
@@ -28,6 +31,9 @@ app.use('/api/book', bookingRoutes);
 app.use('/api/classes', classRoutes);
 app.use('/api/membership', membershipRoutes);
 app.use('/api/trainers', trainerRoutes);
+app.use('/api/subscription', subscriptionRoutes);
+app.use('/api/application', applicationRoutes);
+app.use('/api/admin', adminRoutes);
 
 app.use((err, _req, res, _next) => {
   console.error(err);

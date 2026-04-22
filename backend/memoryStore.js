@@ -4,9 +4,9 @@ export const memoryStore = {
   users: [],
   bookings: [],
   memberships: [
-    { _id: 'mem-starter', type: 'Starter', price: 49, features: ['Gym floor access', '2 classes monthly', 'Locker access'] },
-    { _id: 'mem-premium', type: 'Premium', price: 89, features: ['Unlimited classes', 'Trainer check-ins', 'Recovery lounge'] },
-    { _id: 'mem-elite', type: 'Elite', price: 139, features: ['Personal programming', 'Nutrition review', 'Priority booking'] },
+    { _id: 'mem-starter', type: 'Starter', price: 49, features: ['Gym floor access', '2 classes monthly', 'Locker access'], description: 'Perfect for beginners', createdBy: null },
+    { _id: 'mem-premium', type: 'Premium', price: 89, features: ['Unlimited classes', 'Trainer check-ins', 'Recovery lounge'], description: 'Most popular plan', createdBy: null },
+    { _id: 'mem-elite', type: 'Elite', price: 139, features: ['Personal programming', 'Nutrition review', 'Priority booking'], description: 'Premium experience', createdBy: null },
   ],
   trainers: [
     { _id: 'trainer-aisha', name: 'Aisha Rao', focus: 'Strength coach', stats: '8 yrs coaching' },
@@ -21,6 +21,9 @@ export const memoryStore = {
     { _id: 'class-thu-hiit', day: 'Thursday', time: '19:00', type: 'HIIT', coach: 'Marcus Lee' },
     { _id: 'class-sat-hypertrophy', day: 'Saturday', time: '09:30', type: 'Hypertrophy', coach: 'Dev Mehta' },
   ],
+  subscriptions: [],
+  trainerApplications: [],
+  personalTraining: [],
 };
 
 export function usingMongo() {
@@ -33,6 +36,7 @@ export async function createMemoryUser({ name, email, password }) {
     name,
     email: email.toLowerCase(),
     password: await bcrypt.hash(password, 12),
+    role: 'member',
   };
   memoryStore.users.push(user);
   return user;

@@ -9,7 +9,8 @@ export function requireAuth(req, res, next) {
   }
 
   try {
-    req.user = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
     return next();
   } catch {
     return res.status(401).json({ message: 'Invalid token' });

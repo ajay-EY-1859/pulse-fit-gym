@@ -4,9 +4,13 @@ import { createMemoryUser, memoryStore, usingMongo } from '../memoryStore.js';
 import User from '../models/User.js';
 
 function createToken(user) {
-  return jwt.sign({ id: user._id, email: user.email, name: user.name }, process.env.JWT_SECRET, {
-    expiresIn: '7d',
-  });
+  return jwt.sign(
+    { id: user._id, email: user.email, name: user.name, role: user.role || 'member' },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: '7d',
+    },
+  );
 }
 
 function publicUser(user) {
@@ -14,6 +18,7 @@ function publicUser(user) {
     id: user._id,
     name: user.name,
     email: user.email,
+    role: user.role || 'member',
   };
 }
 

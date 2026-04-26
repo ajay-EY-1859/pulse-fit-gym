@@ -29,3 +29,5 @@ backend/.env
 remainingPlan.md
 DEPLOYMENT_STEPS.md
 DEPLOYMENT_CHECKLIST.md
+.vercel
+.env*.local

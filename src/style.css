@@ -328,10 +328,8 @@ th {
   font-weight: 800;
 }
 
-.form-message {
-  margin: 0;
-  color: #fbbf24;
-}
+
+
 
 .booking-panel {
   display: grid;
@@ -391,4 +389,45 @@ th {
     flex: 1;
     text-align: center;
   }
+}
+
+.nav-user {
+  display: flex;
+  align-items: center;
+  padding: 9px 12px;
+  color: #86efac;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.nav-logout {
+  border: 1px solid rgba(248, 113, 113, 0.4);
+  border-radius: 8px;
+  background: rgba(248, 113, 113, 0.1);
+  color: #fca5a5;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 9px 16px;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.nav-logout:hover {
+  background: rgba(248, 113, 113, 0.25);
+  color: #fef2f2;
+}
+
+.primary-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.form-message {
+  margin: 0;
+  color: #fbbf24;
+  font-size: 0.92rem;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: rgba(251, 191, 36, 0.08);
+  border: 1px solid rgba(251, 191, 36, 0.2);
 }

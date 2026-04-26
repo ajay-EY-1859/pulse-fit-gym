@@ -19,7 +19,23 @@ dotenv.config();
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.use(cors({ origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173' }));
+const allowedOrigins = [
+  process.env.CLIENT_ORIGIN,
+  'http://localhost:5173',
+  'http://127.0.0.1:5173',
+].filter(Boolean);
+
+app.use(cors({
+  origin(origin, callback) {
+    // Allow requests with no origin (mobile apps, curl, etc.)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error(`Origin ${origin} not allowed by CORS`));
+    }
+  },
+  credentials: true,
+}));
 app.use(express.json());
 
 app.get('/api/health', (_req, res) => {
@@ -41,13 +57,13 @@ app.use((err, _req, res, _next) => {
 });
 
 async function start() {
-  if (!process.env.MONGO_URI) {
-    throw new Error('MONGO_URI is required');
-  }
-
   try {
+    if (!process.env.MONGO_URI) {
+      throw new Error('MONGO_URI not configured');
+    }
     await mongoose.connect(process.env.MONGO_URI, { serverSelectionTimeoutMS: 5000 });
     globalThis.pulsefitDbMode = 'mongo';
+    console.log('Connected to MongoDB');
     await seedClasses();
     await seedMemberships();
     await seedTrainers();
@@ -57,11 +73,11 @@ async function start() {
   }
 
   app.listen(port, () => {
-    console.log(`PulseFit API running on port ${port}`);
+    console.log(`PulseFit API running on port ${port} [${globalThis.pulsefitDbMode} mode]`);
   });
 }
 
 start().catch((error) => {
-  console.error(error);
+  console.error('Fatal server error:', error);
   process.exit(1);
 });

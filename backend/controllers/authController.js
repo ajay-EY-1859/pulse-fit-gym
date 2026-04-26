@@ -40,7 +40,7 @@ export async function register(req, res, next) {
       return res.status(201).json({ token: createToken(user), user: publicUser(user) });
     }
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
       return res.status(409).json({ message: 'Email is already registered' });
     }
@@ -73,7 +73,7 @@ export async function login(req, res, next) {
       return res.json({ token: createToken(user), user: publicUser(user) });
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email: email.toLowerCase() });
     const isValid = user ? await bcrypt.compare(password, user.password) : false;
 
     if (!user || !isValid) {

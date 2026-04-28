@@ -57,10 +57,27 @@ app.use((err, _req, res, _next) => {
 });
 
 async function start() {
-  try {
-    if (!process.env.MONGO_URI) {
-      throw new Error('MONGO_URI not configured');
+  const isProduction = process.env.NODE_ENV === 'production';
+  
+  // Validate JWT_SECRET at startup
+  if (!process.env.JWT_SECRET) {
+    if (isProduction) {
+      console.error('FATAL: JWT_SECRET is required in production');
+      process.exit(1);
     }
+    console.warn('WARNING: JWT_SECRET not set, using insecure default for development');
+    process.env.JWT_SECRET = 'dev-secret-do-not-use-in-prod';
+  }
+  
+  if (!process.env.MONGO_URI) {
+    if (isProduction) {
+      console.error('FATAL: MONGO_URI is required in production');
+      process.exit(1);
+    }
+    throw new Error('MONGO_URI not configured');
+  }
+  
+  try {
     await mongoose.connect(process.env.MONGO_URI, { serverSelectionTimeoutMS: 5000 });
     globalThis.pulsefitDbMode = 'mongo';
     console.log('Connected to MongoDB');
@@ -68,6 +85,10 @@ async function start() {
     await seedMemberships();
     await seedTrainers();
   } catch (error) {
+    if (isProduction) {
+      console.error('FATAL: MongoDB connection failed in production mode:', error.message);
+      process.exit(1);
+    }
     globalThis.pulsefitDbMode = 'memory';
     console.warn(`MongoDB unavailable, using in-memory dev data: ${error.message}`);
   }

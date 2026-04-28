@@ -6,8 +6,8 @@ const trainerApplicationSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
-      unique: true,
-      sparse: true,
+      // Removed unique: true - we allow re-application after rejected/approved
+      // Application-level checks prevent multiple pending applications
     },
     requestDate: {
       type: Date,

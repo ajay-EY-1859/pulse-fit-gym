@@ -198,8 +198,12 @@ export async function createMembershipPlan(req, res, next) {
     const { type, price, features, description } = req.body;
     const createdBy = req.user.id;
 
-    if (!type || !price || !features || !Array.isArray(features)) {
+    if (!type || price === undefined || !features || !Array.isArray(features)) {
       return res.status(400).json({ error: 'type, price, and features (array) are required' });
+    }
+
+    if (typeof price !== 'number' || price < 0) {
+      return res.status(400).json({ error: 'price must be a non-negative number' });
     }
 
     if (!usingMongo()) {
@@ -237,19 +241,29 @@ export async function updateMembershipPlan(req, res, next) {
     const { planId } = req.params;
     const { type, price, features, description } = req.body;
 
+    // Build update object - allow explicit empty strings and zero values
+    const updateFields = {};
+    if (type !== undefined) updateFields.type = type;
+    if (price !== undefined) {
+      if (typeof price !== 'number' || price < 0) {
+        return res.status(400).json({ error: 'price must be a non-negative number' });
+      }
+      updateFields.price = price;
+    }
+    if (features !== undefined) updateFields.features = features;
+    if (description !== undefined) updateFields.description = description;
+
     if (!usingMongo()) {
       const plan = memoryStore.memberships.find((m) => m._id === planId);
       if (!plan) {
         return res.status(404).json({ error: 'Plan not found' });
       }
-      if (type) plan.type = type;
-      if (price) plan.price = price;
-      if (features) plan.features = features;
-      if (description) plan.description = description;
+      // Apply all provided updates
+      Object.assign(plan, updateFields);
       return res.json({ message: 'Plan updated', plan });
     }
 
-    const plan = await Membership.findByIdAndUpdate(planId, { type, price, features, description }, { new: true });
+    const plan = await Membership.findByIdAndUpdate(planId, updateFields, { new: true });
 
     if (!plan) {
       return res.status(404).json({ error: 'Plan not found' });

@@ -51,20 +51,7 @@ export async function purchaseSubscription(req, res, next) {
       return res.status(400).json({ error: 'Missing required payment fields' });
     }
 
-    // Process mock payment
-    const paymentResult = processMockPayment({
-      cardNumber,
-      expiry,
-      cvc,
-      amount: 100, // Placeholder, will be replaced with actual plan price
-      email: req.user.email,
-    });
-
-    if (!paymentResult.success) {
-      return res.status(400).json({ error: paymentResult.error });
-    }
-
-    // Get plan details
+    // Get plan details first to get the actual price
     let plan;
     if (!usingMongo()) {
       plan = memoryStore.memberships.find((m) => m._id === planId);
@@ -74,6 +61,34 @@ export async function purchaseSubscription(req, res, next) {
 
     if (!plan) {
       return res.status(404).json({ error: 'Plan not found' });
+    }
+
+    // Process mock payment with actual plan price
+    const paymentResult = processMockPayment({
+      cardNumber,
+      expiry,
+      cvc,
+      amount: plan.price,
+      email: req.user.email,
+    });
+
+    if (!paymentResult.success) {
+      return res.status(400).json({ error: paymentResult.error });
+    }
+
+    // Check for existing active subscription
+    if (!usingMongo()) {
+      const existingSub = memoryStore.subscriptions?.find(
+        (sub) => sub.userId === userId && sub.status === 'active'
+      );
+      if (existingSub) {
+        return res.status(409).json({ error: 'You already have an active subscription' });
+      }
+    } else {
+      const existingSub = await Subscription.findOne({ userId, status: 'active' });
+      if (existingSub) {
+        return res.status(409).json({ error: 'You already have an active subscription' });
+      }
     }
 
     // Create subscription

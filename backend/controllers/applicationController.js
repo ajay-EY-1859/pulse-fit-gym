@@ -35,7 +35,7 @@ export async function requestTrainerRole(req, res, next) {
       });
     }
 
-    // Check if already applied
+    // Check if already applied (only block pending, allow re-application after rejected/approved)
     const existing = await TrainerApplication.findOne({ userId, status: 'pending' });
     if (existing) {
       return res.status(400).json({ error: 'You already have a pending application' });

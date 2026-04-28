@@ -14,7 +14,7 @@ export default function Hero() {
           Book coached classes, compare memberships, and train with specialists across Strength, HIIT, Boxing, and Mobility.
         </motion.p>
         <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.24 }}>
-          <a className="primary-button" href="https://wa.me/919876543210" target="_blank" rel="noreferrer">
+          <a className="primary-button" href={`https://wa.me/${import.meta.env.VITE_WHATSAPP_NUMBER || '919876543210'}`} target="_blank" rel="noreferrer">
             Book coached classes
           </a>
         </motion.div>

@@ -85,3 +85,15 @@ export async function login(req, res, next) {
     return next(error);
   }
 }
+
+/**
+ * Verify token is valid
+ */
+export async function verifyToken(req, res, next) {
+  try {
+    // If we get here, the token is valid (requireAuth middleware already verified it)
+    return res.json({ valid: true, user: req.user });
+  } catch (error) {
+    return next(error);
+  }
+}

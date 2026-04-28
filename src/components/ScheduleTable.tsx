@@ -23,7 +23,7 @@ export default function ScheduleTable() {
   const options = ['All', ...Array.from(new Set(classes.map((item) => item.type)))];
   const visibleClasses = useMemo(
     () => classes.filter((item) => filter === 'All' || item.type === filter),
-    [filter],
+    [filter, classes],
   );
 
   useEffect(() => {
